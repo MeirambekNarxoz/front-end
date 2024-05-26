@@ -68,13 +68,10 @@ export default function FilmItem() {
             };
             await Addcomment(newCommentData);
     
-            // Получение последнего добавленного комментария из API
             const latestComment = await getAllComments(filmId);
 
-            // Добавление последнего комментария в state
             setComments(latestComment);
 
-            // Очистка поля комментария после добавления
             setComment(""); 
         } catch (error) {
             console.error("Error while adding comment:", error);
@@ -121,7 +118,9 @@ export default function FilmItem() {
                                             <h3 className="comment-author">{comment.user.lastname}</h3>
                                         </div>
                                         <p className="comment-content">{comment.commentary}</p>
-                                        <button className="delete-comment-button" onClick={() => handleDeleteComment(comment.id)}>Delete {comment.id}</button>
+                                        {currentUser?.ID === comment.user.id && (
+                                            <button className="btn btn-danger btn-sm" onClick={() => handleDeleteComment(comment.id)}>Delete</button>
+                                        )}
                                     </div>
                                 ))}
                             </div>
