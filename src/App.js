@@ -9,9 +9,8 @@ import CreateGenre from "./components/CreateGenre"; // Assuming CreateGenre comp
 import FilmsItem from "./components/FilmsItem";
 import FilmItem from "./components/FilmItem";
 import ADMIN from "./components/Admin";
-import Subscription from "./components/Subscription";
 import ProfileUser from "./components/ProfileUser";
-
+import UpdateFilm from "./components/UpdateFilm"
 
 export default function App() {
     return (
@@ -29,8 +28,7 @@ export default function App() {
                 <Route path='/film/:filmId' element={<FilmItem />} />
                 <Route path='/createfilms' element={<CreateFilm />} />
                 <Route path='/creategenre' element={<CreateGenre />} />
-                <Route path='/Subscription' element={<Subscription />} />
-
+                <Route path='/updatefilm/:filmId' element={<UpdateFilm />} />
             </Routes>
         </BrowserRouter>
     );

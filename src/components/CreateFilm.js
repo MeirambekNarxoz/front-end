@@ -127,7 +127,7 @@ const CreateFilmsComponent = () => {
     };
     
     return (
-        <div className="container">
+        <div className="containers WIDTHS">
             <NotificationContainer />
             <div className="row">
                 <div className="col-md-6">

@@ -38,7 +38,7 @@ export default function Home() {
     if (selectedGenres.length === 0) {
       return getAllFilms();
     } else {
-      const filmsByGenres = await Promise.all(selectedGenres.map(genreId => getFilmByGenre(genreId))); // Используем getFilmByGenre для получения фильмов по жанру
+      const filmsByGenres = await Promise.all(selectedGenres.map(genreId => getFilmByGenre(genreId))); 
       return filmsByGenres.flat().filter((film, index, self) => self.findIndex(f => f.id === film.id) === index);
     }
   };
@@ -65,7 +65,7 @@ export default function Home() {
               <li className="nav-item"><Link to="/" className="nav-link">BACK</Link></li>
               <Select
                 mode="multiple"
-                style={{ width: '100%' }}
+                style={{ width: '150px' }}
                 placeholder="Select Genre:"
                 onChange={handleGenreChange}
               >
@@ -86,20 +86,20 @@ export default function Home() {
       </header>
 
       <section className="page-section" id="services">
-        <div className="container">
+        <div className="containers">
           <br/><br/><br/><br/>
           <div className="text-center">
             <h1 className="section-heading text-uppercase">FILMS</h1>
             <h3 className="section-subheading text-muted">Enjoy your viewing</h3>
           </div>
-          <div className="row">
+          <div className="film-list">
             {films.map((film) => (
               <div key={film.id} className="col-md-4 mb-4" >
-                <div className="portfolio-item">
+                <div className="film-card h5 p img">
                     <div className="portfolio-hover">
                       <div className="portfolio-hover-content"><i className="fas fa-plus fa-3x"></i></div>
                     </div>
-                    <img src={`data:image/jpeg;base64, ${film.imageData}`} width="384" height="488" alt={film.title} />
+                    <img src={`data:image/jpeg;base64, ${film.imageData}`} width="500px"  alt={film.title} />
                   <div className="portfolio-caption">
                     <div className="title">
                       <a href={film.link} title={film.title}>{film.title}</a>

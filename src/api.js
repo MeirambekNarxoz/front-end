@@ -151,7 +151,7 @@ export const updateUser = async (userId, userData) => {
 
 export const getFilmByGenre = async (genreId) => {
     try {
-        const response = await axios.get(`http://localhost:8080/api/filmGanre/${genreId}`);
+        const response = await axios.get(`http://localhost:8080/api/filmGenre/${genreId}`);
         return response.data;
     } catch (error) {
         console.error("Error fetching films by genre:", error);
@@ -186,4 +186,52 @@ export const deleteComment = async (filmId) => {
     }
 }
 
+export const updateFilm = async (filmId, filmData) => {
+    try {
+        await axios.put(`http://localhost:8080/api/film/${filmId}`, filmData);
+        const updatedFilmData = await getFilmByID(filmId);
+        return updatedFilmData;
+    } catch (error) {
+        throw new Error(error.message);
+    }
+}
+// Обработка платежа
+axios.interceptors.request.use(
+    config => {
+        const token = localStorage.getItem('token');
+        if (token) {
+            config.headers.Authorization = `Bearer ${token}`;
+        }
+        return config;
+    },
+    error => {
+        return Promise.reject(error);
+    }
+);
+
+export const processPayment = async (userId, amount, type) => {
+    try {
+        const response = await axios.post('http://localhost:8080/api/process-payment', {
+            userId,
+            amount,
+            type
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Payment processing error:', error.response ? error.response.data : error.message);
+        throw new Error(error.response ? error.response.data : error.message);
+    }
+};
+
+
+
+// Get All Subscriptions
+export const getAllSubscriptions = async () => {
+    try {
+        const response = await axios.get('http://localhost:8080/api/subscriptions');
+        return response.data;
+    } catch (error) {
+        throw new Error(error.message);
+    }
+};
 

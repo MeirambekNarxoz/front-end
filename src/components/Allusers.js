@@ -1,30 +1,32 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from "react-router-dom";
-import { getAllUsers, deleteUser as apiDeleteUser, loginUser } from '../api';
+import { getAllUsers, deleteUser } from '../api';
 import { NotificationManager, NotificationContainer } from 'react-notifications';
 import { jwtDecode } from 'jwt-decode';
 
-
 const AllUsers = () => {
-    const token = localStorage.getItem('token');
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [authorities, setAuthorities] = useState("");
     const navigate = useNavigate();
-    const [authorities, setAuthorities] = useState(""); 
 
     useEffect(() => {
         const token = localStorage.getItem('token');
         if (!token) {
             navigate("/login", { state: { message: 'You need to login first.', title: 'Login Required' } });
             return;
-        } 
-        const decodedToken = jwtDecode(token);
-        const authorities = decodedToken.authorities;
-        setAuthorities(authorities); 
-        if (authorities !== "ADMIN") { 
-            navigate("/profile", { state: { message: 'You are not authorized.', title: 'Unauthorized' } });
         }
+        
+        const decodedToken = jwtDecode(token);
+        const userAuthorities = decodedToken.authorities;
+        setAuthorities(userAuthorities);
+
+        if (userAuthorities !== "ADMIN") {
+            navigate("/profile", { state: { message: 'You are not authorized.', title: 'Unauthorized' } });
+            return;
+        }
+
         const fetchUsers = async () => {
             try {
                 const data = await getAllUsers();
@@ -37,14 +39,14 @@ const AllUsers = () => {
         };
 
         fetchUsers();
-    }, []);
+    }, [navigate]);
 
     const confirmDelete = async (userId) => {
         if (window.confirm('Are you sure you want to delete this user?')) {
             try {
-                if (authorities !== "ADMIN") {
+                if (authorities === "ADMIN") {
                     const deletedUserDetails = users.find(user => user.id === userId);
-                    await apiDeleteUser(userId);
+                    await deleteUser(userId);
                     setUsers(prevUsers => prevUsers.filter(user => user.id !== userId));
                     NotificationManager.success(`${deletedUserDetails.firstname} ${deletedUserDetails.lastname} was deleted`, 'Deleted', { timeOut: 3000 });
                 } else {
@@ -67,12 +69,17 @@ const AllUsers = () => {
     return (
         <div className="container">
             <NotificationContainer />
+            {window.history.replaceState({},"")}
             <div className="col-md-6">
                 <h2 className="text-info mb-4">Users</h2>
                 {users.map((user) => (
-                    <div key={user.id} className="p-4 bg-secondary rounded shadow-sm mb-3">
-                        {user.firstname} {user.lastname} - {user.email}
-                        <button className="btn btn-danger ml-3" onClick={() => confirmDelete(user.id)}>Delete</button>
+                    <div key={user.id} className="color mb-3">
+                        <>FirstName: {user.firstname} <br/>lastname: {user.lastname}<br/> Email: {user.email}</>
+
+                        { user.role !=="ADMIN" &&(
+                            <button className="btn btn-danger ml-3" onClick={() => confirmDelete(user.id)}>Delete</button>
+                        )
+                        }
                     </div>
                 ))}
             </div>

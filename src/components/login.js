@@ -6,6 +6,7 @@ import 'react-notifications/lib/notifications.css';
 import Cookies from 'js-cookie';
 import { jwtDecode } from 'jwt-decode';
 
+import '../css/login.css';
 
 const Login = () => {
     const navigate = useNavigate();
@@ -68,41 +69,34 @@ const Login = () => {
     }, [message])
 
     return (
-        <div>
-            <div className="container">
-                <div className="row justify-content-center">
-                    <div className="col-md-6">
-                        <div className="card">
-                            <div className="card-header">
-                                <h1 className="text-center">User Login Page</h1>
-                            </div>
-                            <div className="card-body">
-                                <form onSubmit={handleSubmit} className="my-custom-form" method="post">
-                                    <NotificationContainer />
-                                   {window.history.replaceState({},"")}
+        <div className="login-page">
+            <div className="ring">
+                <i style={{ '--clr': '#00ff0a' }}></i>
+                <i style={{ '--clr': '#ff0057' }}></i>
+                <i style={{ '--clr': '#fffd44' }}></i>
+                <div className="login">
+                    <h2>Login</h2>
+                    <form onSubmit={handleSubmit} className="login-form" method="post">
+                        <NotificationContainer />
+                        {window.history.replaceState({}, "")}
 
-                                    <div className="form-group">
-                                        <label htmlFor="email">Email</label>
-                                        <input id="email" type="text" className="form-control" name="email" placeholder="Enter Email" value={credentials.email} onChange={handleChange} />
-                                    </div>
-                                    <div className="form-group">
-                                        <label htmlFor="password">Password</label>
-                                        <input id="password" type="password" className="form-control" name="password" placeholder="Enter Password" value={credentials.password} onChange={handleChange} />
-                                    </div>
-                                    <div className="form-group">
-                                        <button type="submit" className="btn btn-primary btn-block" name="login-submit" id="login-submit">Log In</button>
-                                    </div>
-                                    <div className="form-group text-center">
-                                        <span>New user? <Link to="/register" className="btn btn-link">Register</Link></span>
-                                        <Link to="/" className="btn btn-link">Back</Link>
-                                    </div>
-                                    {message != null && (
-                                        <h4 className="alert alert-danger">{message}</h4>
-                                    )}
-                                </form>
-                            </div>
+                        <div className="inputBx">
+                            <input id="email" type="text" name="email" placeholder="Email" value={credentials.email} onChange={handleChange} />
                         </div>
-                    </div>
+                        <div className="inputBx">
+                            <input id="password" type="password" name="password" placeholder="Password" value={credentials.password} onChange={handleChange} />
+                        </div>
+                        <div className="inputBx">
+                            <input type="submit" value="Sign in" />
+                        </div>
+                        <div className="links">
+                            <Link to="/register">Signup</Link>
+                            <Link to="/">Back</Link>
+                        </div>
+                        {message != null && (
+                            <h4 className="alert alert-danger">{message}</h4>
+                        )}
+                    </form>
                 </div>
             </div>
         </div>
