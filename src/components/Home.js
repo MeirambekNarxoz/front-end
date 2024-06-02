@@ -3,7 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import { getAllFilms, getAllGenre, getFilmByGenre } from "../api";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'react-notifications/lib/notifications.css';
-import '../css/style.css';
+import '../css/Page.css';
 import { Select } from 'antd';
 import { NotificationContainer, NotificationManager } from 'react-notifications';
 

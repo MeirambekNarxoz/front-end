@@ -3,7 +3,7 @@ import { Link, useNavigate, Navigate } from "react-router-dom";
 import { CreateGenre, getAllGenre, deleteGenre } from "../api";
 import { NotificationManager, NotificationContainer } from 'react-notifications';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import {jwtDecode}from 'jwt-decode';
+import { jwtDecode } from 'jwt-decode';
 
 const CreateGenreComponent = () => {
     const [authorities, setAuthorities] = useState(""); 
@@ -37,7 +37,7 @@ const CreateGenreComponent = () => {
         };
 
         fetchData();
-    }, []);
+    }, [navigate]);
 
     const handleDelete = async (genreId) => {
         try {
@@ -82,39 +82,48 @@ const CreateGenreComponent = () => {
     }
 
     return (
-        <div className="container-fluid bg-dark text-white py-5">
+        <div className="container py-5">
             <div className="row justify-content-center">
-                <div className="col-md-6">
-                    <div className="card bg-secondary text-white">
-                        <div className="card-header">
-                            <h2 className="mb-0">Create New Category</h2>
+                <div className="col-md-8">
+                    <div className="card shadow-lg">
+                        <div className="card-header bg-primary text-white">
+                            <h2 className="mb-0">Create New Genre</h2>
                             <NotificationContainer />
+                            {window.history.replaceState({}, "")}
                         </div>
                         <div className="card-body">
                             <form onSubmit={handleSubmit}>
                                 <div className="form-group">
-                                    <label>Name:</label>
-                                    <input type="text" className="form-control" value={genre.name} onChange={handleName} required />
+                                    <label htmlFor="name">Name:</label>
+                                    <input type="text" id="name" className="form-control" value={genre.name} onChange={handleName} required />
                                 </div>
-                                <button type="submit" className="btn btn-primary">Save</button>
+                                <button type="submit" className="btn btn-success">Save</button>
                             </form>
+                            {message != null && (
+                                <div className="alert alert-danger mt-3">{message}</div>
+                            )}
                         </div>
-
-                        <div>
+                    </div>
+                </div>
+                <div className="col-md-8 mt-4">
+                    <div className="card shadow-lg">
+                        <div className="card-header bg-secondary text-white">
+                            <h2 className="mb-0">Existing Genres</h2>
+                        </div>
+                        <div className="card-body">
                             {genres.map(genre => (
-                                <div key={genre.id} className="form-check">
-                                    <label className="form-check-label" htmlFor={genre.id}>{genre.name}</label>
-                                    <button className="btn btn-danger ml-3" onClick={() => handleDelete(genre.id)}>Delete</button>
+                                <div key={genre.id} className="d-flex justify-content-between align-items-center border-bottom py-2">
+                                    <span>{genre.name}</span>
+                                    <button className="btn btn-danger btn-sm" onClick={() => handleDelete(genre.id)}>Delete</button>
                                 </div>
                             ))}
                         </div>
-                        <span className="pull-right"><Link to="/ADMIN" className="btn btn-info">Back</Link></span>
+                    </div>
+                    <div className="mt-3">
+                        <Link to="/ADMIN" className="btn btn-info">Back</Link>
                     </div>
                 </div>
             </div>
-            {message != null && (
-                <h4 className="alert alert-danger">{message}</h4>
-            )}
         </div>
     );
 }

@@ -141,13 +141,13 @@ export const createSubscription = async (subscriptionType) => {
 
 export const updateUser = async (userId, userData) => {
     try {
-        await axios.put(`http://localhost:8080/api/user/${userId}`, userData);
-        const updatedUserData = await getUserByID(userId);
-        return updatedUserData;
+        const response = await axios.put(`http://localhost:8080/api/user/${userId}`, userData);
+        return response.data;
     } catch (error) {
-        throw new Error(error.message);
+        console.error('Error updating user:', error.response ? error.response.data : error.message);
+        throw new Error(error.response ? error.response.data : error.message);
     }
-}
+};
 
 export const getFilmByGenre = async (genreId) => {
     try {
@@ -209,12 +209,12 @@ axios.interceptors.request.use(
     }
 );
 
-export const processPayment = async (userId, amount, type) => {
+export const processPayment = async (userId, subscriptionName, amount) => {
     try {
         const response = await axios.post('http://localhost:8080/api/process-payment', {
             userId,
             amount,
-            type
+            type: subscriptionName // Ensuring type is the subscription name as a string
         });
         return response.data;
     } catch (error) {
@@ -222,9 +222,6 @@ export const processPayment = async (userId, amount, type) => {
         throw new Error(error.response ? error.response.data : error.message);
     }
 };
-
-
-
 // Get All Subscriptions
 export const getAllSubscriptions = async () => {
     try {

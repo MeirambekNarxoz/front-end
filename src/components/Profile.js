@@ -6,7 +6,7 @@ import { getAllFilms, getAllGenre ,getFilmByGenre} from "../api";
 import {jwtDecode}from 'jwt-decode';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'react-notifications/lib/notifications.css';
-import '../css/style.css';
+import '../css/Page.css';
 import { Select } from 'antd';
 export default function Profile() {
 

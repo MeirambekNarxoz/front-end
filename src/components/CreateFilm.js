@@ -129,6 +129,7 @@ const CreateFilmsComponent = () => {
     return (
         <div className="containers WIDTHS">
             <NotificationContainer />
+            {window.history.replaceState({},"")}
             <div className="row">
                 <div className="col-md-6">
                     <h2>Create Film</h2>

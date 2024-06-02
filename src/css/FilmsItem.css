@@ -1,83 +1,124 @@
-/* FilmsItem.css */
+@import url('https://fonts.googleapis.com/css?family=Source+Code+Pro:200');
 
-/* Основной контейнер */
+body {
+    background-image: url('https://static.pexels.com/photos/414171/pexels-photo-414171.jpeg');
+    background-size: cover;
+    animation: slidein 100s alternate infinite;
+    font-family: 'Source Code Pro', monospace;
+    margin: 0;
+    padding: 0;
+    color: white;
+}
+
+@keyframes slidein {
+    from { background-position: top; background-size: 3000px; }
+    to { background-position: -100px 0px; background-size: 2750px; }
+}
+
+.container-fluid {
+    background-color: rgba(0, 0, 0, 0.85);
+    padding-top: 60px;
+}
+
 .film-item-container {
-    background-color: #141414; /* Цвет фона */
-    padding: 3rem 0; /* Отступы */
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    background-color: #141414;
+    padding: 2rem;
+    border-radius: 10px;
+    margin-top: 2rem;
 }
 
-/* Заголовок для комментариев */
-.film-item-comments h3 {
-    color: #fff; /* Цвет текста */
-    margin-bottom: 1rem; /* Отступ снизу */
-}
-.film-card{
-    width: 300px;
+.card-header img {
+    border-radius: 10px;
 }
 
-/* Контейнер для комментариев */
-.film-item-comment-container {
-    background-color: #222222; /* Цвет фона */
-    border-radius: 10px; /* Радиус границ */
-    padding: 15px; /* Отступы */
-    overflow-y: auto; /* Полоса прокрутки */
-    max-height: 400px; /* Максимальная высота */
+.card-header h2 {
+    margin-top: 1rem;
+    font-size: 2rem;
 }
 
-/* Комментарий */
-.film-item-comment {
-    padding: 15px; /* Отступы */
-    background-color: #333; /* Цвет фона */
-    border: 1px solid #222; /* Граница */
-    border-radius: 10px; /* Радиус границ */
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Тень */
-    margin-bottom: 15px; /* Отступ снизу */
+.card-body {
+    margin-top: 1rem;
 }
 
-/* Заголовок комментария */
-.film-item-comment-header {
+.card-footer {
+    margin-top: 2rem;
+}
+
+.input-group .form-control {
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+    background-color: #222;
+    border: none;
+    color: #fff;
+}
+
+.input-group .btn-primary {
+    background-color: #e50914;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+}
+
+.input-group .btn-primary:hover {
+    background-color: #f40612;
+}
+
+.comments-section {
+    margin-top: 2rem;
+}
+
+.comment-container {
+    background-color: #222;
+    padding: 1rem;
+    border-radius: 10px;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.comment {
+    background-color: #333;
+    padding: 1rem;
+    border-radius: 10px;
+    margin-bottom: 1rem;
+    position: relative;
+}
+
+.comment-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 1px solid #222; /* Граница */
-    padding-bottom: 5px; /* Отступ снизу */
 }
 
-/* Автор комментария */
-.film-item-comment-author {
-    margin-bottom: 0; /* Убираем отступ снизу */
-    font-weight: bold; /* Жирный текст */
-    color: #17a2b8; /* Цвет текста */
+.comment-author {
+    font-weight: bold;
+    color: #17a2b8;
 }
 
-/* Текст комментария */
-.film-item-comment-content {
-    margin-top: 10px; /* Отступ сверху */
-    color: #d1d1d1; /* Цвет текста */
+.comment-content {
+    margin-top: 0.5rem;
+    color: #d1d1d1;
 }
 
-/* Отступы для группы ввода */
-.film-item-input-group {
-    display: flex;
-    margin-top: 10px; /* Отступ сверху */
+.btn-info {
+    background-color: #e50914;
+    border-color: #e50914;
+    color: #fff;
 }
 
-/* Стили для кнопки */
-.film-item-input-group .btn {
-    border-top-right-radius: 10px; /* Радиус границ */
-    border-bottom-right-radius: 10px; /* Радиус границ */
-    border-left: none; /* Убираем левую границу */
-    background-color: #e50914; /* Цвет фона */
-    border: none; /* Убираем границы */
-    color: #fff; /* Цвет текста */
-    padding: 0.5rem 1rem; /* Отступы внутри кнопки */
-    cursor: pointer; /* Курсор при наведении */
+.btn-info:hover {
+    background-color: #f40612;
+    border-color: #f40612;
 }
 
-/* При наведении на кнопку */
-.film-item-input-group .btn:hover {
-    background-color: #f40612; /* Изменяем цвет фона */
+.btn-danger {
+    background-color: #e50914;
+    border-color: #e50914;
+    color: #fff;
+}
+
+.btn-danger:hover {
+    background-color: #f40612;
+    border-color: #f40612;
 }

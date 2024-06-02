@@ -4,39 +4,42 @@ import { NotificationContainer, NotificationManager } from 'react-notifications'
 import { getAllFilms, getAllGenre, getFilmByGenre } from "../api";
 import Cookies from 'js-cookie';
 import { Select } from 'antd';
-import { jwtDecode } from 'jwt-decode';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'react-notifications/lib/notifications.css';
-import '../css/style.css';
+import '../css/Page.css';
+import HandAnimation from '../HandAnimation'; // Import the HandAnimation component
+import {jwtDecode} from "jwt-decode";
+const { Option } = Select;
 
-export default function ADMIN() {
+export default function Admin() {
     const location = useLocation();
     const navigate = useNavigate();
     const [genres, setGenres] = useState([]);
     const [films, setFilms] = useState([]);
     const [selectedGenres, setSelectedGenres] = useState([]);
+    const [showHandAnimation, setShowHandAnimation] = useState(true); // State to control hand animation visibility
 
     useEffect(() => {
         const token = localStorage.getItem('token');
         if (!token) {
             navigate("/login", { state: { message: 'You need to login first.', title: 'Login Required' } });
             return;
-        } 
+        }
         const decodedToken = jwtDecode(token);
         const userAuthorities = decodedToken.authorities;
-        if (userAuthorities !== "ADMIN") { 
+        if (userAuthorities !== "ADMIN") {
             navigate("/profile", { state: { message: 'You are not authorized.', title: 'Unauthorized' } });
             return;
         }
-        
+
         const fetchData = async () => {
             try {
                 const genreData = await getAllGenre();
                 setGenres(genreData);
-    
+
                 const filmData = await getFilmsByGenres(selectedGenres);
                 setFilms(filmData);
-    
+
                 if (location.state) {
                     NotificationManager.success(location.state.message, location.state.title, 3000);
                 }
@@ -45,8 +48,14 @@ export default function ADMIN() {
                 NotificationManager.error(`Failed to fetch data: ${error.message}`, "Error", 3000);
             }
         };
-    
+
         fetchData();
+
+        const timer = setTimeout(() => {
+            setShowHandAnimation(false);
+        }, 6000);
+
+        return () => clearTimeout(timer);
     }, []);
 
     const getFilmsByGenres = async (selectedGenres) => {
@@ -65,97 +74,96 @@ export default function ADMIN() {
     };
 
     const handleLogout = () => {
-        Cookies.remove('token');
+        localStorage.clear();
         navigate("/", { state: { message: 'You have been logged out successfully.', title: 'Logout Successful' } });
     }
 
-    return (<div>
-      <nav className="navbar navbar-expand-lg navbar-dark fixed-top bg-dark">
-        <div className="container">
-          <a className="navbar-brand" href="#page-top">NETFLIX</a>
-          <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-            <span className="navbar-toggler-icon"></span>
-          </button>
-          <div className="collapse navbar-collapse" id="navbarResponsive">
-            <ul className="navbar-nav ms-auto">
-            <li className="nav-item"><Link to="/users" className="nav-link">GetAllUsers</Link></li>
-        <li className="nav-item"><Link to="/createfilms" className="nav-link">CreateFilms</Link></li>
-        <li className="nav-item"><Link to="/creategenre" className="nav-link">CreateGenre</Link></li>
-                <button onClick={handleLogout} className="nav-link">Logout</button>
-              <Select
-                mode="multiple"
-                style={{ width: '150px' }}
-                placeholder="Select Genre:"
-                onChange={handleGenreChange}
-              >
-                {genres.map(genre => (
-                  <Select.Option key={genre.id} value={genre.id}>
-                    {genre.name}
-                  </Select.Option>
-                ))}
-              </Select>
-            </ul>
-          </div>
-        </div>
-      </nav>
-
-      <header className="masthead text-white text-center">
-        <NotificationContainer/>
-        {window.history.replaceState({},"")}
-      </header>
-
-      <section className="page-section" id="services">
-        <div className="containers">
-          <br/><br/><br/><br/>
-          <div className="text-center">
-            <h1 className="section-heading text-uppercase">FILMS</h1>
-            <h3 className="section-subheading text-muted">Enjoy your viewing</h3>
-          </div>
-          <div className="film-list">
-            {films.map((film) => (
-              <div key={film.id} className="col-md-4 mb-4" >
-                <div className="film-card h5 p img">
-                    <div className="portfolio-hover">
-                      <div className="portfolio-hover-content"><i className="fas fa-plus fa-3x"></i></div>
+    return (
+        <div className="center">
+            {showHandAnimation && <HandAnimation />} {/* Conditionally render the hand animation */}
+            <nav className="navbar navbar-expand-lg navbar-dark fixed-top bg-dark">
+                <div className="container">
+                    <a className="navbar-brand" href="#page-top">NETFLIX</a>
+                    <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                        <span className="navbar-toggler-icon"></span>
+                    </button>
+                    <div className="collapse navbar-collapse" id="navbarResponsive">
+                        <ul className="navbar-nav ms-auto">
+                            <li className="nav-item"><Link to="/users" className="nav-link">GetAllUsers</Link></li>
+                            <li className="nav-item"><Link to="/createfilms" className="nav-link">CreateFilms</Link></li>
+                            <li className="nav-item"><Link to="/creategenre" className="nav-link">CreateGenre</Link></li>
+                            <li className="nav-item">
+                                <button onClick={handleLogout} className="btn btn-link nav-link">Logout</button>
+                            </li>
+                        </ul>
                     </div>
-                    <img src={`data:image/jpeg;base64, ${film.imageData}`} width="500px"  alt={film.title} />
-                  <div className="portfolio-caption">
-                    <div className="title">
-                      <a href={film.link} title={film.title}>{film.title}</a>
-                    </div>
-                    <div className="portfolio-caption-subheading text-muted">Illustration</div>
-                  </div>
-                   <Link to={`/updatefilm/${film.id}`} className="btn btn-info">View</Link>
                 </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+            </nav>
 
-      <section className="page-section bg-light" id="portfolio">
-        <div className="container">
-          <div className="text-center">
-            <h2 className="section-heading text-uppercase">Portfolio</h2>
-            <h3 className="section-subheading text-muted">Lorem ipsum dolor sit amet consectetur.</h3>
-          </div>
+            <header className="masthead text-white text-center">
+                <NotificationContainer />
+                {window.history.replaceState({}, "")}
+            </header>
+
+            <section className="page-section" id="services">
+                <div className="container">
+                    <br/><br/><br/><br/>
+                    <div className="text-center">
+                        <h1 className="section-heading text-uppercase">Films</h1>
+                        <h3 className="section-subheading text-muted">Enjoy your viewing</h3>
+                    </div>
+                    <div className="d-flex justify-content-center mb-4">
+                        <Select
+                            mode="multiple"
+                            style={{ width: '300px' }}
+                            placeholder="Select Genre"
+                            onChange={handleGenreChange}
+                        >
+                            {genres.map(genre => (
+                                <Option key={genre.id} value={genre.id}>
+                                    {genre.name}
+                                </Option>
+                            ))}
+                        </Select>
+                    </div>
+                    <div className="row">
+                        {films.map((film) => (
+                            <div key={film.id} className="col-md-4 mb-4">
+                                <div className="film-card card h5 p img">
+                                    <div className="portfolio-hover">
+                                        <div className="portfolio-hover-content"><i className="fas fa-plus fa-3x"></i></div>
+                                    </div>
+                                    <img src={`data:image/jpeg;base64, ${film.imageData}`} width="100%" alt={film.title} />
+                                    <div className="portfolio-caption">
+                                        <div className="title">
+                                            <a href={film.link} title={film.title}>{film.title}</a>
+                                        </div>
+                                        <div className="portfolio-caption-subheading text-muted">Illustration</div>
+                                    </div>
+                                    <Link to={`/updatefilm/${film.id}`} className="btn btn-info">View</Link>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </section>
+
+            <footer className="footer py-4 bg-dark">
+                <div className="container">
+                    <div className="row align-items-center">
+                        <div className="col-lg-4 text-lg-start text-center text-white">Copyright &copy; Your Website 2024</div>
+                        <div className="col-lg-4 my-3 my-lg-0">
+                            <a className="btn btn-dark btn-social mx-2" href="#!" aria-label="Twitter"><i className="fab fa-twitter"></i></a>
+                            <a className="btn btn-dark btn-social mx-2" href="#!" aria-label="Facebook"><i className="fab fa-facebook-f"></i></a>
+                            <a className="btn btn-dark btn-social mx-2" href="#!" aria-label="LinkedIn"><i className="fab fa-linkedin-in"></i></a>
+                        </div>
+                        <div className="col-lg-4 text-lg-end text-center">
+                            <a className="link-light text-decoration-none me-3" href="#!">Privacy Policy</a>
+                            <a className="link-light text-decoration-none" href="#!">Terms of Use</a>
+                        </div>
+                    </div>
+                </div>
+            </footer>
         </div>
-      </section>
-      <footer className="footer py-4 bg-dark">
-        <div className="container">
-          <div className="row align-items-center">
-            <div className="col-lg-4 text-lg-start text-center text-white">Copyright &copy; Your Website 2024</div>
-            <div className="col-lg-4 my-3 my-lg-0">
-              <a className="btn btn-dark btn-social mx-2" href="#!" aria-label="Twitter"><i className="fab fa-twitter"></i></a>
-              <a className="btn btn-dark btn-social mx-2" href="#!" aria-label="Facebook"><i className="fab fa-facebook-f"></i></a>
-              <a className="btn btn-dark btn-social mx-2" href="#!" aria-label="LinkedIn"><i className="fab fa-linkedin-in"></i></a>
-            </div>
-            <div className="col-lg-4 text-lg-end text-center">
-              <a className="link-light text-decoration-none me-3" href="#!">Privacy Policy</a>
-              <a className="link-light text-decoration-none" href="#!">Terms of Use</a>
-            </div>
-          </div>
-        </div>
-      </footer>
-    </div>);
+    );
 }

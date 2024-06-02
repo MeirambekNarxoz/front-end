@@ -92,7 +92,7 @@ export default function FilmItem() {
     }
     return (
         <div className="container-fluid bg-dark text-white py-5">
-            <div className="background-animation"></div> {/* Background Animation */}
+            <div className="background-animation"></div>
             <div className="row justify-content-center">
                 <div className="col-md-8">
                     <div className="film-item-container text-white">

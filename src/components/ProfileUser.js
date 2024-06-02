@@ -2,7 +2,6 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { getUserByID, updateUser, getAllSubscriptions, processPayment } from '../api';
 import { NotificationContainer, NotificationManager } from 'react-notifications';
-import {jwtDecode} from "jwt-decode";
 
 export default function ProfileUser() {
     const navigate = useNavigate();
@@ -22,19 +21,6 @@ export default function ProfileUser() {
     const [paymentMessage, setPaymentMessage] = useState(null);
 
     useEffect(() => {
-        const token = localStorage.getItem('token');
-        if (!token) {
-            navigate("/login", { state: { message: 'You need to login first.', title: 'Login Required' } });
-            return;
-        }
-    
-        const decodedToken = jwtDecode(token);
-        const balance = decodedToken.Balans;
-        const subscriptionType = decodedToken.SUBSCRIBTION;
-    
-        setBalance(balance || 0);
-        setSubscriptionType(subscriptionType || '');
-    
         const fetchUserData = async () => {
             try {
                 const userData = await getUserByID(id);
@@ -42,11 +28,13 @@ export default function ProfileUser() {
                     ...userData,
                     subscribtion: userData.subscribtion ? userData.subscribtion.id : ''
                 });
+                setBalance(userData.balans || 0);
+                setSubscriptionType(userData.subscribtion ? userData.subscribtion.name : '');
             } catch (error) {
                 console.error("Error fetching user data:", error);
             }
         };
-    
+
         const fetchSubscriptions = async () => {
             try {
                 const subscriptionsData = await getAllSubscriptions();
@@ -55,34 +43,43 @@ export default function ProfileUser() {
                 console.error("Error fetching subscriptions:", error.message);
             }
         };
-    
+
         fetchUserData();
         fetchSubscriptions();
-    }, [id, navigate]);
-    
+    }, [id]);
+
+    useEffect(() => {
+        if (user.subscribtion) {
+            const selectedSubscription = subscriptions.find(sub => sub.id === parseInt(user.subscribtion));
+            if (selectedSubscription) {
+                setSubscriptionType(selectedSubscription.name);
+            }
+        }
+    }, [user.subscribtion, subscriptions]);
+
     const handleSubmit = async (ev) => {
         ev.preventDefault();
         try {
             const isPasswordEmpty = user.newpassword.trim() === '';
-            await updateUser(id, isPasswordEmpty ? 
-                {
-                    firstname: user.firstname,
-                    lastname: user.lastname,
-                    age: user.age,
-                    email: user.email,
-                    subscribtion: user.subscribtion
-                }
-                : user 
-            ); 
+            const updatedUser = {
+                firstname: user.firstname,
+                lastname: user.lastname,
+                age: user.age,
+                email: user.email,
+                subscribtion: { id: user.subscribtion }
+            };
+            if (!isPasswordEmpty) {
+                updatedUser.password = user.newpassword;
+            }
+            await updateUser(id, updatedUser); 
             navigate("/Profile", { state: { message: 'Profile updated successfully.', title: 'Update Successful' } });
         } catch (error) {
-            setMessage('Error updating profile');
             setUser({
                 ...user,
                 newpassword: ''
             });
         }
-    }
+    };
 
     const handlePayment = async () => {
         try {
@@ -91,29 +88,30 @@ export default function ProfileUser() {
                 throw new Error('Selected subscription not found');
             }
             const amount = selectedSubscription.amount;
-            const result = await processPayment(id, amount, selectedSubscription.name);
+            const result = await processPayment(id, selectedSubscription.name, amount);
 
-            await updateUser(id, {
+            // Directly update balance and subscription type in the state
+            setBalance(prevBalance => prevBalance - amount);
+            setUser({
                 ...user,
                 subscribtion: selectedSubscription.id
             });
+            setSubscriptionType(selectedSubscription.name);
 
-            setPaymentMessage(result);
+            NotificationManager.success('Payment processed successfully', 'Success', 3000);
         } catch (error) {
             console.error('Payment processing error:', error);
             setPaymentMessage('Error processing payment');
+            NotificationManager.error('Error processing payment', 'Error', 3000);
         }
     };
 
+   
     useEffect(() => {
-        if (message != null) {
-            NotificationManager.error('Error updating profile:', message, 3000);
-        }
-    }, [message]);
-
-    useEffect(() => {
-        if (paymentMessage != null) {
-            NotificationManager.info('Payment Status:', paymentMessage, 3000);
+        if (paymentMessage != null && paymentMessage === 'Payment processed successfully') {
+            NotificationManager.success(paymentMessage, 'Success', 3000);
+        } else if (paymentMessage != null) {
+            NotificationManager.error(paymentMessage, 'Error', 3000);
         }
     }, [paymentMessage]);
 
@@ -133,6 +131,7 @@ export default function ProfileUser() {
                         <div className="card-body">
                             <form onSubmit={handleSubmit}>
                                 <NotificationContainer />
+                                {window.history.replaceState({},"")}
                                 <div className="form-group">
                                     <label htmlFor="lastname">Last Name</label>
                                     <input id="lastname" className="form-control" name="lastname" placeholder="Enter Last Name" value={user.lastname || ''} onChange={handleChange} />

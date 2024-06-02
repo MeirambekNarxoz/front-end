@@ -1,3 +1,81 @@
+
+.film-card {
+  position: relative;
+  overflow: hidden;
+  border: none;
+  transition: transform 0.3s;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.film-card img {
+  width: 100%;
+  border-radius: 10px 10px 0 0;
+  transition: transform 0.3s;
+}
+
+.film-card:hover img {
+  transform: scale(1.05);
+}
+
+.portfolio-hover {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: calc(100% - 50px); /* Adjusted to avoid the button area */
+  background: rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  transition: opacity 0.3s;
+  border-radius: 10px 10px 0 0;
+}
+
+.film-card:hover .portfolio-hover {
+  opacity: 1;
+}
+
+.portfolio-hover-content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #fff;
+}
+
+.portfolio-caption {
+  padding: 15px;
+  text-align: center;
+}
+
+.portfolio-caption .title {
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.portfolio-caption-subheading {
+  font-size: 1rem;
+  font-weight: 400;
+  color: #6c757d;
+}
+
+.film-card .btn-info {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10; /* Ensure the button is above the hover effect */
+  border-radius: 20px;
+  background-color: #17a2b8;
+  color: white;
+  font-weight: bold;
+  transition: background-color 0.3s;
+}
+
+.film-card .btn-info:hover {
+  background-color: #138496;
+}
+
 .my-custom-form {
   background-color: #f2f2f2;
   padding: 20px;

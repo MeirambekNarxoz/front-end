@@ -1,0 +1,144 @@
+@import url('https://fonts.googleapis.com/css?family=Source+Code+Pro:200');
+
+body {
+    background-image: url('https://static.pexels.com/photos/414171/pexels-photo-414171.jpeg');
+    background-size: cover;
+    -webkit-animation: slidein 100s;
+    animation: slidein 100s;
+    -webkit-animation-fill-mode: forwards;
+    animation-fill-mode: forwards;
+    -webkit-animation-iteration-count: infinite;
+    animation-iteration-count: infinite;
+    -webkit-animation-direction: alternate;
+    animation-direction: alternate;
+    font-family: 'Source Code Pro', monospace;
+    margin: 0;
+    padding: 0;
+    color: white;
+}
+
+@-webkit-keyframes slidein {
+    from { background-position: top; background-size: 3000px; }
+    to { background-position: -100px 0px; background-size: 2750px; }
+}
+
+@keyframes slidein {
+    from { background-position: top; background-size: 3000px; }
+    to { background-position: -100px 0px; background-size: 2750px; }
+}
+
+.center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    position: relative;
+    padding-top: 60px;
+    padding-bottom: 20px;
+    background: rgba(75, 75, 250, 0.3);
+    min-height: 100vh;
+}
+
+.navbar {
+    margin-bottom: 0;
+    background-color: #141414;
+    border: none;
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #e50914;
+}
+
+.nav-item .nav-link {
+    font-size: 1.2rem;
+    color: #ffffff;
+}
+
+.nav-item .nav-link:hover {
+    color: #e50914;
+}
+
+.masthead {
+    padding: 2rem 0;
+    width: 100%;
+    text-align: center;
+}
+
+.page-section {
+    padding: 2rem 0;
+    width: 100%;
+}
+
+.film-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+}
+
+.film-card {
+    background: #141414;
+    border: none;
+    color: #fff;
+    transition: transform 0.2s;
+    border-radius: 5px;
+    overflow: hidden;
+    width: 300px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.film-card:hover {
+    transform: scale(1.05);
+}
+
+.film-card img {
+    border-bottom: 1px solid #333;
+    width: 100%;
+    height: auto;
+}
+
+.portfolio-caption .title a {
+    color: #e50914;
+    font-size: 1.2rem;
+    text-decoration: none;
+}
+
+.portfolio-caption .title a:hover {
+    text-decoration: underline;
+}
+
+.portfolio-caption-subheading {
+    font-size: 1rem;
+    color: #b3b3b3;
+}
+
+.footer {
+    padding: 1rem 0;
+    background: #141414;
+    color: #ffffff;
+    width: 100%;
+    position: relative;
+    bottom: 0;
+}
+
+.footer a {
+    color: #e50914;
+    text-decoration: none;
+}
+
+.footer a:hover {
+    text-decoration: underline;
+}
+
+.btn-info {
+    background-color: #e50914;
+    border-color: #e50914;
+    color: #fff;
+}
+
+.btn-info:hover {
+    background-color: #f6121d;
+    border-color: #f6121d;
+}
