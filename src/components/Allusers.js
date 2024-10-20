@@ -2,7 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from "react-router-dom";
 import { getAllUsers, deleteUser } from '../api';
 import { NotificationManager, NotificationContainer } from 'react-notifications';
-import { jwtDecode } from 'jwt-decode';
+import {jwtDecode} from 'jwt-decode';
+import 'react-notifications/lib/notifications.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 const AllUsers = () => {
     const [users, setUsers] = useState([]);
@@ -48,12 +50,24 @@ const AllUsers = () => {
                     const deletedUserDetails = users.find(user => user.id === userId);
                     await deleteUser(userId);
                     setUsers(prevUsers => prevUsers.filter(user => user.id !== userId));
-                    NotificationManager.success(`${deletedUserDetails.firstname} ${deletedUserDetails.lastname} was deleted`, 'Deleted', { timeOut: 3000 });
+                    NotificationManager.success(
+                        `${deletedUserDetails.firstname} ${deletedUserDetails.lastname} was deleted`,
+                        'Deleted',
+                        3000
+                    );
                 } else {
-                    NotificationManager.error("You do not have permission to delete users", "Permission Denied", 3000);
+                    NotificationManager.error(
+                        "You do not have permission to delete users",
+                        "Permission Denied",
+                        3000
+                    );
                 }
             } catch (error) {
-                NotificationManager.error('Error deleting user:', `${error.message}`, { timeOut: 3000 });
+                NotificationManager.error(
+                    'Error deleting user:',
+                    `${error.message}`,
+                    3000
+                );
             }
         }
     };
@@ -67,23 +81,27 @@ const AllUsers = () => {
     }
 
     return (
-        <div className="container">
+        <div className="container mt-5">
             <NotificationContainer />
-            {window.history.replaceState({},"")}
-            <div className="col-md-6">
-                <h2 className="text-info mb-4">Users</h2>
+            <h2 className="text-center mb-4">Users</h2>
+            <div className="row">
                 {users.map((user) => (
-                    <div key={user.id} className="color mb-3">
-                        <>FirstName: {user.firstname} <br/>lastname: {user.lastname}<br/> Email: {user.email}</>
-
-                        { user.role !=="ADMIN" &&(
-                            <button className="btn btn-danger ml-3" onClick={() => confirmDelete(user.id)}>Delete</button>
-                        )
-                        }
+                    <div key={user.id} className="col-md-4 mb-3">
+                        <div className="card">
+                            <div className="card-body">
+                                <h5 className="card-title">{user.firstname} {user.lastname}</h5>
+                                <p className="card-text">Email: {user.email}</p>
+                                {user.role !== "ADMIN" && (
+                                    <button className="btn btn-danger" onClick={() => confirmDelete(user.id)}>Delete</button>
+                                )}
+                            </div>
+                        </div>
                     </div>
                 ))}
             </div>
-            <span className="pull-right"><Link to="/ADMIN" className="btn btn-info">Back</Link></span>
+            <div className="text-center mt-4">
+                <Link to="/ADMIN" className="btn btn-info">Back</Link>
+            </div>
         </div>
     );
 };

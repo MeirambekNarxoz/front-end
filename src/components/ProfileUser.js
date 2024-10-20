@@ -1,5 +1,5 @@
-import { Link, useNavigate, useParams } from "react-router-dom"; 
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { getUserByID, updateUser, getAllSubscriptions, processPayment } from '../api';
 import { NotificationContainer, NotificationManager } from 'react-notifications';
 
@@ -87,10 +87,11 @@ export default function ProfileUser() {
             if (!selectedSubscription) {
                 throw new Error('Selected subscription not found');
             }
+
+         
             const amount = selectedSubscription.amount;
             const result = await processPayment(id, selectedSubscription.name, amount);
 
-            // Directly update balance and subscription type in the state
             setBalance(prevBalance => prevBalance - amount);
             setUser({
                 ...user,
@@ -106,7 +107,6 @@ export default function ProfileUser() {
         }
     };
 
-   
     useEffect(() => {
         if (paymentMessage != null && paymentMessage === 'Payment processed successfully') {
             NotificationManager.success(paymentMessage, 'Success', 3000);
@@ -131,7 +131,7 @@ export default function ProfileUser() {
                         <div className="card-body">
                             <form onSubmit={handleSubmit}>
                                 <NotificationContainer />
-                                {window.history.replaceState({},"")}
+                                {window.history.replaceState({}, "")}
                                 <div className="form-group">
                                     <label htmlFor="lastname">Last Name</label>
                                     <input id="lastname" className="form-control" name="lastname" placeholder="Enter Last Name" value={user.lastname || ''} onChange={handleChange} />

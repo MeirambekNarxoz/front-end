@@ -44,7 +44,7 @@ const Login = () => {
         try {
             const response = await loginUser(credentials);
             if (response.token) {
-                Cookies.set('token', response.token, { expires: 7 });
+                // Cookies.set('token', response.token, { expires: 7 });
                 const authorities = jwtDecode(response.token).authorities;
                 localStorage.setItem('token', response.token);
                 const redirectPath = authorities === "ADMIN" ? "/ADMIN" : "/Profile";

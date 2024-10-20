@@ -45,7 +45,7 @@ const CreateGenreComponent = () => {
             await deleteGenre(genreId);
             setGenres(prevGenres => prevGenres.filter(genre => genre.id !== genreId));
             NotificationManager.success(`${deletedGenreDetails.name} was deleted`, 'Deleted', 3000);
-            navigate(0);
+            
         } catch (error) {
             NotificationManager.error('Error deleting genre:', `${error.message}`, 3000);
         }
@@ -62,14 +62,14 @@ const CreateGenreComponent = () => {
             const savedGenre = await CreateGenre(genre);
             if (savedGenre) {
                 setGenre({ ...genre, name: '' });
-                navigate("/ADMIN", { state: { message: savedGenre.name + " was saved", title: 'Saved Category' } });
+                navigate("/ADMIN", { state: { message:"Ganre was saved", title: 'Saved Category' } });
             } else {
                 console.error("Error saving genre: Empty response");
             }
         } catch (error) {
             console.error("Error saving genre:", error);
             NotificationManager.error('Error saving genre:', `${error.message}`, 3000);
-            navigate(0);
+            
         }
     }
 
@@ -95,7 +95,7 @@ const CreateGenreComponent = () => {
                             <form onSubmit={handleSubmit}>
                                 <div className="form-group">
                                     <label htmlFor="name">Name:</label>
-                                    <input type="text" id="name" className="form-control" value={genre.name} onChange={handleName} required />
+                                    <input type="text" id="name" className="form-control" onChange={handleName} />
                                 </div>
                                 <button type="submit" className="btn btn-success">Save</button>
                             </form>

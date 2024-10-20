@@ -92,6 +92,7 @@ const CreateFilmsComponent = () => {
         try {
             await deleteFilm(filmId);
             setFilms(films.filter(film => film.id !== filmId));
+            navigate("/ADMIN", { state: { message: 'Delete Film successfully', title: 'Delete Film' } });
         } catch (error) {
             console.error("Error deleting film:", error);
         }

@@ -1,15 +1,18 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Link, useParams } from "react-router-dom";
 import { getFilmByID, Addcomment, getAllComments, deleteComment } from "../api"; 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {jwtDecode} from 'jwt-decode';
 import '../css/FilmsItem.css';
+import { NotificationContainer, NotificationManager } from 'react-notifications';
+
 export default function FilmItem() {
     const { filmId } = useParams();
     const [film, setFilm] = useState(null);
     const [comment, setComment] = useState("");
     const [comments, setComments] = useState([]);
     const [currentUser, setCurrentUser] = useState(null);
+    const videoRef = useRef(null);
 
     useEffect(() => {
         const fetchFilm = async () => {
@@ -87,11 +90,23 @@ export default function FilmItem() {
         }
     };
 
+    const handleSkip = (direction) => {
+        if (videoRef.current) {
+            const newTime = direction === 'forward' ? videoRef.current.currentTime + 10 : videoRef.current.currentTime - 10;
+            videoRef.current.currentTime = Math.max(0, newTime);
+        }
+    };
+
     if (!film) {
         return <div>Loading...</div>;
     }
+
     return (
         <div className="container-fluid bg-dark text-white py-5">
+               <header className="masthead text-white text-center">
+        <NotificationContainer/>
+        {window.history.replaceState({},"")}
+      </header>
             <div className="background-animation"></div>
             <div className="row justify-content-center">
                 <div className="col-md-8">
@@ -118,6 +133,25 @@ export default function FilmItem() {
                                 />
                                 <button className="btn btn-primary" onClick={handleAddComment}>Add Comment</button>
                             </div>
+                        </div>
+                    </div>
+                    <div className="card mb-4">
+                        <div className="card-header bg-primary text-white">Film Video</div>
+                        <div className="card-body text-dark">
+                            {film.videoData ? (
+                                <>
+                                    <video ref={videoRef} width="100%" controls>
+                                        <source src={`data:video/mp4;base64,${film.videoData}`} type="video/mp4" />
+                                        Your browser does not support the video tag.
+                                    </video>
+                                    <div className="mt-3">
+                                        <button className="btn btn-secondary mr-2" onClick={() => handleSkip('backward')}>-10s</button>
+                                        <button className="btn btn-secondary" onClick={() => handleSkip('forward')}>+10s</button>
+                                    </div>
+                                </>
+                            ) : (
+                                <p>No video available for this film.</p>
+                            )}
                         </div>
                     </div>
                     <Link to="/Profile" className="btn btn-info mt-3">Back</Link>

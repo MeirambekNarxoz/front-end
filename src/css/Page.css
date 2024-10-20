@@ -94,9 +94,8 @@ body {
 }
 
 .film-card img {
-    border-bottom: 1px solid #333;
-    width: 100%;
-    height: auto;
+    object-fit: cover;
+    height: 400px;
 }
 
 .portfolio-caption .title a {

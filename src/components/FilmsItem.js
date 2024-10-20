@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useParams, Link } from "react-router-dom";
 import { getFilmByID, getAllComments } from "../api";
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -7,6 +7,8 @@ export default function FilmsItem() {
     const { filmId } = useParams();
     const [film, setFilm] = useState(null);
     const [comments, setComments] = useState([]);
+    const videoRef = useRef(null);
+    const [currentTime, setCurrentTime] = useState(0);
 
     useEffect(() => {
         const fetchFilm = async () => {
@@ -33,6 +35,7 @@ export default function FilmsItem() {
 
         fetchComments();
     }, [filmId]);
+
 
     if (!film) {
         return <div>Loading...</div>;
